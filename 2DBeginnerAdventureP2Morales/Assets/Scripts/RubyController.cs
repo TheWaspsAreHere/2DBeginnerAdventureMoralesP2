@@ -26,6 +26,8 @@ public class RubyController : MonoBehaviour
         currentHealth = maxHealth;
         currentHealth = 1;
         animator = GetComponent<Animator>();
+
+
     }
 
     // Update is called once per frame
@@ -47,6 +49,7 @@ public class RubyController : MonoBehaviour
     }
 
 
+
     private void FixedUpdate()
     {
         Vector2 position = rigidbody2d.position;
@@ -64,6 +67,6 @@ public class RubyController : MonoBehaviour
 
         }
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        Debug.Log(currentHealth + "/" + maxHealth);
+        UIHealthBar.instance.SetValue(currentHealth/(float)maxHealth);
     }
 }
