@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class RubyController : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class RubyController : MonoBehaviour
     public int health { get { return currentHealth; } }
     int currentHealth;
 
+    bool isInvincible;
+    float invincibleTimer;
 
     Rigidbody2D rigidbody2d;
     float horizontal;
@@ -46,11 +50,34 @@ public class RubyController : MonoBehaviour
         animator.SetFloat("Look X", lookDirection.x);
         animator.SetFloat("Look Y", lookDirection.y);
         animator.SetFloat("Speed", move.magnitude);
+
+        if (isInvincible)
+        {
+            invincibleTimer -= Time.deltaTime;
+            if(invincibleTimer < 0)
+            {
+                isInvincible = false;
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            Launch();
+        }
+    }
+
+    void Launch()
+    {
+        GameObject projectileObject = Instantiate(projectilePrefab, rigidbody2d.position + Vector2.up * 0.5f,Quaternion.identity);
+
+        Projectile projectile = projectileObject.GetComponent<JointProjectionMode>();
+        projectile.Launch(lookDirection, 300);
+
+        animator.SetTrigger("Launch");
     }
 
 
 
-    private void FixedUpdate()
+     void FixedUpdate()
     {
         Vector2 position = rigidbody2d.position;
         position.x = position.x + speed * horizontal * Time.deltaTime;
